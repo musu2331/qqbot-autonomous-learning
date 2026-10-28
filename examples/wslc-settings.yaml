@@ -1,0 +1,4 @@
+session:
+  cpuCount: 4
+  memorySize: "6GB"
+  defaultBindingAddress: "127.0.0.1"

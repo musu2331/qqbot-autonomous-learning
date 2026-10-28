@@ -1,0 +1,16 @@
+source:
+  id: "mit_ocw_candidate"
+  enabled: false
+  base_url: "https://ocw.mit.edu/"
+  allowed_hosts: ["ocw.mit.edu"]
+  allowed_path_prefixes: ["/courses/"]
+  trust_level: "A"
+  topics: ["math", "ai_technology"]
+  fetch_mode: "manual_then_incremental"
+  license:
+    declared: "CC BY-NC-SA 4.0, subject to resource-specific notices"
+    evidence_url: "https://ocw.mit.edu/pages/privacy-and-terms-of-use/"
+    reviewed_at: null
+    approved_uses: []
+  external_upload_allowed: false
+  require_review: true

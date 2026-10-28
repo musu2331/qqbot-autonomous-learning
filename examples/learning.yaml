@@ -1,0 +1,118 @@
+schema_version: 1
+
+runtime:
+  mode: "single_host"
+  timezone: "UTC"                # 学习时间窗的时区，部署时显式设置
+  chat_concurrency: 2
+  per_session_concurrency: 1
+  heavy_worker_concurrency: 1
+  request_timeout_s: 45
+  max_pending_jobs: 200
+
+storage:
+  sqlite_path: "./data/bot.db"
+  asset_root: "./data/assets"
+  qdrant_url: "http://127.0.0.1:6333"
+  knowledge_collection: "knowledge_v1"
+  memory_collection: "memories_v1"
+  active_index_generation: 1
+  max_asset_storage_gib: 20
+  min_free_disk_gib: 5
+
+models:
+  chat:
+    provider: "existing_bot_provider"
+    model_id: "REPLACE_WITH_MODEL_ID"
+    secret_env: "QQBOT_MODEL_API_KEY"
+    context_window_tokens: 12000
+    max_input_tokens: 8600
+    reserved_output_tokens: 1600
+    safety_margin_tokens: 1800
+  embedding:
+    model_id: "BAAI/bge-m3"
+    revision: "REPLACE_WITH_PINNED_REVISION"
+    vector_dimension: 1024
+    normalize: true
+    max_input_tokens: 600
+    batch_size: 8
+  reranker:
+    enabled: false
+    model_id: "BAAI/bge-reranker-v2-m3"
+    revision: "REPLACE_WITH_PINNED_REVISION"
+    max_candidates: 12
+
+retrieval:
+  lexical_top_k: 20
+  vector_top_k: 20
+  merged_candidate_limit: 30
+  max_subqueries: 2
+  max_knowledge_chunks: 6
+  max_memory_items: 4
+  evidence_tokens: 3000
+  memory_tokens: 900             # 稳定记忆 300 + 情景记忆 600
+  allow_parent_expansion: true
+  require_acl_filter: true
+  verify_authority_before_prompt: true
+  chinese_tokenizer: "REPLACE_WITH_PINNED_TOKENIZER"
+  cache_ttl_s: 300
+  cache_include_acl_epoch: true
+
+memory:
+  enabled: true
+  require_user_opt_in: true
+  group_shared_requires_notice_and_approval: true
+  inference_auto_publish: false
+  max_active_profile_items_per_user: 100
+  max_active_episode_items_per_user: 200
+  max_item_tokens: 160
+  episode_archive_after_days: 90
+  temporary_memory_review_after_days: 30
+  raw_chat_retention_days: 7      # 仅对已授权持久化的聊天生效
+
+learning:
+  enabled: false                # 基础能力验收后再开放自主调度
+  allowed_source_ids: []        # 空列表时禁止自动采集
+  auto_publish: false
+  daily_document_limit: 5
+  daily_download_mib: 300
+  daily_pdf_page_limit: 120
+  daily_video_minutes: 60
+  daily_learning_llm_tokens: 60000
+  weekly_topic_weights:
+    math: 0.40
+    ai_technology: 0.35
+    music: 0.10
+    visual_art: 0.10
+    humor_expression: 0.05
+  idle_window_utc: ["01:00", "05:00"]
+  pause_when_chat_queue_nonempty: true
+  pause_when_memory_percent_above: 75
+  max_retry_attempts: 3
+
+extraction:
+  max_single_download_mib: 100
+  max_document_pages: 200
+  max_video_duration_minutes: 120
+  prefer_official_subtitles: true
+  fallback_asr: true
+  asr_model: "REPLACE_AFTER_BENCHMARK"
+  asr_compute_type: "int8"       # 按设备能力验证
+  board_check_interval_s: 20
+  max_heavy_frames_per_minute: 4
+  max_image_megapixels: 12
+  require_formula_review_on_uncertainty: true
+
+security:
+  deny_private_network_fetch: true
+  validate_each_redirect: true
+  allow_external_model_upload_for_private_data: false
+  log_message_bodies: false
+  run_extractors_in_isolated_worker: true
+  execute_source_code: false
+
+moderation:
+  ingestion_checks: true
+  output_checks: true
+  ambiguous_action: "review"
+  max_output_rewrites: 1
+  policy_version: "content-policy-v1"

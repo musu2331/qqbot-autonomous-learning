@@ -1,0 +1,27 @@
+# Credentials and private runtime configuration
+.env
+.env.*
+!.env.example
+!*.env.example
+*.pem
+*.key
+secrets/
+
+# Runtime data, chats, assets, indexes and model caches
+data/
+assets/
+models/
+cache/
+logs/
+*.db
+*.db-*
+*.sqlite*
+*.vhdx
+
+# Environments and generated files
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db
